@@ -10,7 +10,7 @@ import com.workSchedule.workSchedule.model.MyUser;
 import com.workSchedule.workSchedule.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired UserService userService;
