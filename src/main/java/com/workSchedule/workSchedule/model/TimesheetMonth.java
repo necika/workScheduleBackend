@@ -1,5 +1,6 @@
 package com.workSchedule.workSchedule.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,31 +14,35 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.workSchedule.workSchedule.enums.UserType;
 
 @Entity
 @Table
-public class MyUser {
+public class TimesheetMonth {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
 	@Column
-	private String email;
-	 
+	private String month;
+	
 	@Column
-	private String password;
-
-	@Column
-	private UserType userType;
+	private Long monthStamp;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
+	@OneToMany(mappedBy = "timesheetMonth", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
 			CascadeType.REFRESH })
 	private List<TimesheetEntry> timesheetEntries;
-	
-	public MyUser() {}
+
+	public TimesheetMonth() {
+		super();
+	}
+
+	public TimesheetMonth(String month,Long monthStamp) {
+		this.month = month;
+		this.monthStamp = monthStamp;
+		this.timesheetEntries = new ArrayList<TimesheetEntry>();
+	}
 	
 	public Long getId() {
 		return id;
@@ -47,28 +52,20 @@ public class MyUser {
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getMonth() {
+		return month;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
-	public String getPassword() {
-		return password;
+	public Long getMonthStamp() {
+		return monthStamp;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
+	public void setMonthStamp(Long monthStamp) {
+		this.monthStamp = monthStamp;
 	}
 
 	public List<TimesheetEntry> getTimesheetEntries() {
@@ -78,6 +75,7 @@ public class MyUser {
 	public void setTimesheetEntries(List<TimesheetEntry> timesheetEntries) {
 		this.timesheetEntries = timesheetEntries;
 	}
+	
 	
 	
 }
