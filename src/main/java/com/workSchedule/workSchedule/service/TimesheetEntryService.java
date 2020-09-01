@@ -52,9 +52,19 @@ public class TimesheetEntryService {
 		}
 		return tseListDTO;
 	}
+	
 	public ResponseEntity<TimesheetEntryDTO> saveTimesheetEntry(TimesheetEntryDTO tsEntryDTO) {
+		TimesheetEntry newTsEntry;
+		if(tsEntryDTO.getId() == null) {
+			TimesheetMonth tsMonth = tmRepo.getOneById(tsEntryDTO.getTsMonthId());
+			MyUser user = userRepo.getOneById(tsEntryDTO.getUserId());
+			newTsEntry = new TimesheetEntry(tsEntryDTO, tsMonth, user);
+			newTsEntry = tseRepo.save(newTsEntry);
+			TimesheetEntryDTO retEntry = new TimesheetEntryDTO(newTsEntry);
+			return new ResponseEntity<TimesheetEntryDTO>(retEntry,HttpStatus.OK);
+		}
 		TimesheetEntry tsEntry = tseRepo.getOneById(tsEntryDTO.getId());
-		TimesheetEntry newTsEntry = new TimesheetEntry(tsEntryDTO, tsEntry.getTimesheetMonth(), tsEntry.getUser());
+		newTsEntry = new TimesheetEntry(tsEntryDTO, tsEntry.getTimesheetMonth(), tsEntry.getUser());
 		newTsEntry = tseRepo.save(newTsEntry);
 		TimesheetEntryDTO retEntry = new TimesheetEntryDTO(newTsEntry);
 		return new ResponseEntity<TimesheetEntryDTO>(retEntry,HttpStatus.OK);

@@ -1,6 +1,8 @@
 package com.workSchedule.workSchedule.dtos;
 
+import com.workSchedule.workSchedule.model.MyUser;
 import com.workSchedule.workSchedule.model.TimesheetEntry;
+import com.workSchedule.workSchedule.model.TimesheetMonth;
 
 public class TimesheetEntryDTO {
 
@@ -12,10 +14,22 @@ public class TimesheetEntryDTO {
 	private String endTime;
 	private Integer position;
 	private Boolean changed;
+	private Long userId;
+	private Long tsMonthId;
 	
 	public TimesheetEntryDTO() {}
 
-	
+	public TimesheetEntryDTO(TimesheetEntry tse,MyUser user,TimesheetMonth tsMonth) {
+		super();
+		this.id = tse.getId();
+		this.day = tse.getDay();
+		this.task = tse.getTask();
+		this.description = tse.getDescription();
+		this.startTime = tse.getStartTime();
+		this.endTime = tse.getEndTime();
+		this.position = tse.getPosition();
+		this.changed = false;
+	}
 	
 	public TimesheetEntryDTO(TimesheetEntry tse) {
 		super();
@@ -27,10 +41,28 @@ public class TimesheetEntryDTO {
 		this.endTime = tse.getEndTime();
 		this.position = tse.getPosition();
 		this.changed = false;
+		this.tsMonthId = tse.getTimesheetMonth().getId();
+		this.userId = tse.getUser().getId();
 	}
 
 	public Long getId() {
 		return id;
+	}
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long getTsMonthId() {
+		return tsMonthId;
+	}
+
+	public void setTsMonthId(Long tsMonthId) {
+		this.tsMonthId = tsMonthId;
 	}
 
 	public void setId(Long id) {

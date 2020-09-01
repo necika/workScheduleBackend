@@ -11,4 +11,7 @@ public interface TimesheetMonthRepository extends JpaRepository<TimesheetMonth, 
 
 	@Query(value = "select * from timesheet_month where month_stamp = ?1",nativeQuery = true)
     TimesheetMonth findByTimeStamp(Long timestamp);
+	
+	@Query(value = "select * from timesheet_month where id = ?1",nativeQuery = true)
+	TimesheetMonth getOneById(Long id);
 }
