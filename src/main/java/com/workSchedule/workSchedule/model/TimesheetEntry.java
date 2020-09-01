@@ -37,6 +37,9 @@ public class TimesheetEntry {
 	private String endTime;
 	
 	@Column
+	private Integer minutes;
+	
+	@Column
 	private Integer position;
 	
 	@JsonIgnore
@@ -60,15 +63,13 @@ public class TimesheetEntry {
 		this.position = tsDTO.getPosition();
 		this.timesheetMonth = tsMonth;
 		this.user = user;
+		setMinutes(tsDTO.getStartTime());
 	}
-
-
 
 	public Long getId() {
 		return id;
 	}
 
-	
 	
 	public MyUser getUser() {
 		return user;
@@ -84,6 +85,18 @@ public class TimesheetEntry {
 
 	public Integer getDay() {
 		return day;
+	}
+
+	
+	public Integer getMinutes() {
+		String[] array = startTime.split(":");
+		return Integer.parseInt(array[0])*60 + Integer.parseInt(array[1]);
+	}
+
+	public void setMinutes(String startTime) {
+		String[] array = startTime.split(":");
+		Integer minutes = Integer.parseInt(array[0])*60 + Integer.parseInt(array[1]);
+		this.minutes = minutes;
 	}
 
 	public void setDay(Integer day) {

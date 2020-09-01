@@ -11,7 +11,7 @@ import com.workSchedule.workSchedule.model.TimesheetEntry;
 @Repository
 public interface TimesheetEntryRepository extends JpaRepository<TimesheetEntry, Long>{
 
-	@Query(value = "select * from timesheet_entry where timesheet_month_id = ?1 and user_id = ?2",nativeQuery = true)
+	@Query(value = "select * from timesheet_entry where timesheet_month_id = ?1 and user_id = ?2 order by day,minutes asc",nativeQuery = true)
 	List<TimesheetEntry> getAllByMonth(Long tmId,Long userId);
 	
 	@Query(value = "select * from timesheet_entry where id = ?1", nativeQuery = true)
