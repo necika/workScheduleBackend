@@ -31,4 +31,12 @@ public class UserService {
 			return null;
 		}
 	}
+
+	public ResponseEntity<Long> getId(String email) {
+		MyUser user = userRepo.findByEmail(email);
+		if(user == null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<Long>(user.getId(),HttpStatus.OK);
+	}
 }

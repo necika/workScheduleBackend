@@ -1,5 +1,7 @@
 package com.workSchedule.workSchedule.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,28 +10,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.workSchedule.workSchedule.model.MyUser;
+import com.workSchedule.workSchedule.service.TimesheetMonthService;
 import com.workSchedule.workSchedule.service.UserService;
 import com.workSchedule.workSchedule.util.Authorized;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/timesheetMonth")
+public class TimesheetMonthController {
 
-	@Autowired UserService userService;
+	@Autowired
+	TimesheetMonthService tsMonthService;
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<MyUser> getById(@PathVariable Long id){
-		return userService.getById(id);
-	}
+	@Autowired
+	UserService userService;
 	
-	@GetMapping("/getId/{id}")
-	public ResponseEntity<Long> getId(@RequestHeader("Authorization") String token){
+	@GetMapping("/getId/{month}")
+	public ResponseEntity<Long> getTimesheetMonthId(@PathVariable String month, @RequestHeader("Authorization") String token){
 		String email = userService.getEmailFromToken(token);
 		if(email != null && !Authorized.isAuthorised(email)) {
 			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
 		}
-		return userService.getId(email);
+		return tsMonthService.getTimesheetMonthId(month);
 	}
 	
 }
