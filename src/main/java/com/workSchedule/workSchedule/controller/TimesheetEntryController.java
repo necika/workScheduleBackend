@@ -43,8 +43,12 @@ public class TimesheetEntryController {
 	}
 	
 	//Sta ako izbrisem onog sa pozicijom 0, to proveriti sta raditi, srediti to
-	@DeleteMapping()
-	public void delete() {
-		
+	@GetMapping("/delete/{id}")
+	public ResponseEntity<TimesheetEntryDTO> delete(@PathVariable Long id,@RequestHeader("Authorization") String token) {
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return tseService.deleteTsEntry(id);
 	}
 }
