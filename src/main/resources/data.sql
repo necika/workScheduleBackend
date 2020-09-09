@@ -18,3 +18,7 @@ INSERT IGNORE INTO `diplomski`.`timesheet_entry` (`id`, `day`, `description`, `e
 values ('3', 1, 'Description 1', '10:00',480 ,0 ,'08:00', 'Task 1', '2', '1');
 INSERT IGNORE INTO `diplomski`.`timesheet_entry` (`id`, `day`, `description`, `end_time`, `minutes`, `position`,`start_time`, `task`, `timesheet_month_id`, `user_id`) 
 values ('4', 1, 'Description 1', '10:00',480,0 ,'08:00', 'Task 1', '2', '2');
+
+--morning meetings
+INSERT IGNORE INTO `diplomski`.`morning_meeting` (`id`, `date_stamp`, `problems`, `today`, `yesterday`,`user_id`) 
+values ('1', '61560338400000', '', 'Task today', 'Task yesterday', '1');

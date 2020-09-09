@@ -37,6 +37,11 @@ public class MyUser {
 			CascadeType.REFRESH })
 	private List<TimesheetEntry> timesheetEntries;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
+			CascadeType.REFRESH })
+	private List<MorningMeeting> morningMeetings;
+	
 	public MyUser() {}
 	
 	public Long getId() {
@@ -77,6 +82,14 @@ public class MyUser {
 
 	public void setTimesheetEntries(List<TimesheetEntry> timesheetEntries) {
 		this.timesheetEntries = timesheetEntries;
+	}
+
+	public List<MorningMeeting> getMorningMeetings() {
+		return morningMeetings;
+	}
+
+	public void setMorningMeetings(List<MorningMeeting> morningMeetings) {
+		this.morningMeetings = morningMeetings;
 	}
 	
 	
