@@ -54,7 +54,11 @@ public class TimesheetEntry {
 	
 	public TimesheetEntry(TimesheetEntryDTO tsDTO,TimesheetMonth tsMonth,MyUser user) {
 		super();
-		this.id = tsDTO.getId();
+		if(tsDTO.getId() == null) {
+			this.id = (long)0;
+		}else {
+			this.id = tsDTO.getId();
+		}
 		this.day = tsDTO.getDay();
 		this.task = tsDTO.getTask();
 		this.description = tsDTO.getDescription();

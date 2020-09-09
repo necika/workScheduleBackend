@@ -69,5 +69,14 @@ public class TimesheetEntryService {
 		TimesheetEntryDTO retEntry = new TimesheetEntryDTO(newTsEntry);
 		return new ResponseEntity<TimesheetEntryDTO>(retEntry,HttpStatus.OK);
 	}
+	public ResponseEntity<TimesheetEntryDTO> deleteTsEntry(Long id) {
+		TimesheetEntry tsEntry = tseRepo.getOneById(id);
+		if(tsEntry == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		tseRepo.delete(tsEntry);
+		TimesheetEntryDTO tsEntryDTO = new TimesheetEntryDTO(tsEntry);
+		return new ResponseEntity<>(tsEntryDTO,HttpStatus.OK);
+	}
 	
 }
