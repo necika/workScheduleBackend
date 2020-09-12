@@ -31,5 +31,13 @@ public class UserController {
 		}
 		return userService.getId(email);
 	}
+	@GetMapping("/getLogged")
+	public ResponseEntity<MyUser> getLoggedUser(@RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return userService.getLoggenUser(email);
+	}
 	
 }

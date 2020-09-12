@@ -2,5 +2,7 @@ package com.workSchedule.workSchedule.enums;
 
 public enum UserType {
 	LEADER,
-	EMPLOYER
+	EMPLOYER,
+	ADMIN,
+	SUPERADMIN
 }

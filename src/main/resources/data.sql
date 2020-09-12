@@ -1,7 +1,18 @@
---users
+--companies
+INSERT IGNORE INTO `diplomski`.`company` (`id`, `description`,`name`)
+ 	VALUES ('1', 'Company description 1','Company 1');
 
-INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `email`, `password`, `user_type`) VALUES ('1', 'user@user', 'sifra', '1');
-INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `email`, `password`, `user_type`) VALUES ('2', 'lead@lead', 'sifra', '0');
+--users(team leaders and employees and admins)
+INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`, `email`,`first_name`, `job_title`,`last_name`, `password`, `user_type`, `company_id`)
+ 	VALUES ('4', '33','admin1@admin1','Mirko', '2', 'Mirkovic', 'sifra', '2', '1');
+INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`,`email`,`first_name`, `job_title`,`last_name`, `password`, `user_type`, `company_id`)
+ 	VALUES ('1', '30','user@user','Marko', '0', 'Markovic', 'sifra', '1', '1');
+INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`,`email`,`first_name`,`job_title`,`last_name`, `password`, `user_type`, `company_id`) 
+	VALUES ('2', '29','lead@lead','Jovan', '2','Jovanovic', 'sifra', '0', '1');
+
+--users(superAdmin)
+INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `email`,`first_name`,`last_name`, `password`, `user_type`)
+VALUES ('3', 'superadmin@superadmin','Nemanja', 'Nemanjic', 'sifra', '3');
 
 --ts months
 INSERT IGNORE INTO `diplomski`.`timesheet_month` (`id`, `month`, `month_stamp`) values ('1', '2020-06', '61551698400000');
