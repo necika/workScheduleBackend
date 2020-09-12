@@ -1,5 +1,6 @@
 package com.workSchedule.workSchedule.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,10 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.workSchedule.workSchedule.enums.JobTitle;
 import com.workSchedule.workSchedule.enums.UserType;
 
 @Entity
@@ -28,9 +31,21 @@ public class MyUser {
 	 
 	@Column
 	private String password;
+	
+	@Column
+	private Integer age;
+	
+	@Column
+	private String firstName;
+	
+	@Column
+	private String lastName;
 
 	@Column
 	private UserType userType;
+	
+	@Column
+	private JobTitle jobTitle;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
@@ -42,8 +57,35 @@ public class MyUser {
 			CascadeType.REFRESH })
 	private List<MorningMeeting> morningMeetings;
 	
+	@JsonIgnore
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	private Company company;
+	
 	public MyUser() {}
 	
+	public MyUser(String email, String password, String firstName, String lastName, UserType userType,
+			JobTitle jobTitle,int age,Company company) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userType = userType;
+		this.jobTitle = jobTitle;
+		this.age = age;
+		this.timesheetEntries = new ArrayList<TimesheetEntry>();
+		this.morningMeetings = new ArrayList<MorningMeeting>();
+		this.company = company;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -90,6 +132,38 @@ public class MyUser {
 
 	public void setMorningMeetings(List<MorningMeeting> morningMeetings) {
 		this.morningMeetings = morningMeetings;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public JobTitle getJobTitle() {
+		return jobTitle;
+	}
+
+	public void setJobTitle(JobTitle jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 	

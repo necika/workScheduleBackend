@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import com.workSchedule.workSchedule.dtos.MorningMeetingDTO;
@@ -19,7 +20,10 @@ public class MorningMeetingService {
 	@Autowired MorningMeetingRepository meetingRepo;
 	
 	@Autowired UserRepository userRepo;
-
+	
+	@Autowired EmailService emailService;
+	
+	
 	public ResponseEntity<MorningMeetingDTO> getMorningMeetingByToday(String dateString) {
 		MorningMeeting meeting = meetingRepo.findByTimeStamp(getCurrentDateStamp(dateString));
 		if(meeting == null) {
@@ -45,6 +49,20 @@ public class MorningMeetingService {
 			meeting.setId(meetingDTO.getId());
 		}
 		meeting = meetingRepo.save(meeting);
+		
+		String txt = "Today's morning meeting is written by user : "+user.getFirstName() + " " + user.getLastName(); 
+		String subject = "Today's morning meeting";
+		
+		try {
+			emailService.sendNotification("kcentar4@gmail.com", subject, txt);
+		} catch (MailException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return new ResponseEntity(new MorningMeetingDTO(meeting),HttpStatus.OK);
 		
 	}
