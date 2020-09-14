@@ -58,8 +58,17 @@ public class MyUser {
 	private List<MorningMeeting> morningMeetings;
 	
 	@JsonIgnore
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
+			CascadeType.REFRESH })
+	private List<Task> tasks;
+	
+	@JsonIgnore
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	private Company company;
+	
+	@JsonIgnore
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	private Project project;
 	
 	public MyUser() {}
 	
@@ -75,7 +84,16 @@ public class MyUser {
 		this.age = age;
 		this.timesheetEntries = new ArrayList<TimesheetEntry>();
 		this.morningMeetings = new ArrayList<MorningMeeting>();
+		this.tasks = new ArrayList<Task>();
 		this.company = company;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 
 	public Integer getAge() {
@@ -164,6 +182,14 @@ public class MyUser {
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 	

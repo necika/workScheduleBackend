@@ -1,8 +1,5 @@
 package com.workSchedule.workSchedule.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,14 +7,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.workSchedule.workSchedule.enums.TaskStatus;
 
 @Entity
 @Table
-public class Company {
+public class Task {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,32 +23,18 @@ public class Company {
 	
 	@Column
 	private String name;
-	
+	 
 	@Column
 	private String description;
 	
-	@JsonIgnore
-	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
-			CascadeType.REFRESH })
-	private List<Project> projects;
+	@Column
+	private TaskStatus status;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
-			CascadeType.REFRESH })
-	private List<MyUser> users;
-
-	public Company() {}
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	private MyUser user;
 	
-	
-	
-	public Company(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.users = new ArrayList<MyUser>();
-	}
-
-
+	public Task() {}
 
 	public Long getId() {
 		return id;
@@ -76,20 +60,22 @@ public class Company {
 		this.description = description;
 	}
 
-	public List<MyUser> getUsers() {
-		return users;
+	public MyUser getUser() {
+		return user;
 	}
 
-	public void setUsers(List<MyUser> users) {
-		this.users = users;
+	public void setUser(MyUser user) {
+		this.user = user;
 	}
 
-	public List<Project> getProjects() {
-		return projects;
+	public TaskStatus getStatus() {
+		return status;
 	}
 
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
-	}	
+	public void setStatus(TaskStatus status) {
+		this.status = status;
+	}
+	
+	
 	
 }
