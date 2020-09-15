@@ -3,6 +3,7 @@ package com.workSchedule.workSchedule.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.workSchedule.workSchedule.dtos.AddCompanyDTO;
@@ -19,6 +20,8 @@ public class CompanyService {
 	@Autowired CompanyRepository companyRepo;
 	
 	@Autowired UserRepository userRepo;
+	
+	@Autowired PasswordEncoder encoder;
 
 	public ResponseEntity<AddCompanyDTO> save(AddCompanyDTO companyDTO) {
 		Company company = new Company(companyDTO.getCompanyName(),companyDTO.getCompanyDescription());
@@ -26,8 +29,8 @@ public class CompanyService {
 		if(company.getId() == null) {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
 		}
-		MyUser user = new MyUser(companyDTO.getUsername(),companyDTO.getPassword(),companyDTO.getFirstName(),
-				companyDTO.getLastName(),UserType.ADMIN,JobTitle.SENIOR,companyDTO.getAge(),company);
+		MyUser user = new MyUser(companyDTO.getUsername(),encoder.encode(companyDTO.getPassword()),companyDTO.getFirstName(),
+				companyDTO.getLastName(),UserType.ADMIN,JobTitle.SENIOR,companyDTO.getAge(),company,null);
 		user = userRepo.save(user);
 		if(user.getId() == null) {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
