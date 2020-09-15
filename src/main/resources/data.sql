@@ -10,15 +10,15 @@ INSERT IGNORE INTO `diplomski`.`project` (`id`, `description`, `company_id`, `na
 
 --users(team leaders and employees and admins)
 INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`, `email`,`first_name`, `job_title`,`last_name`, `password`, `user_type`, `company_id`, `project_id`)
- 	VALUES ('4', '33','admin1@admin1','Mirko', '2', 'Mirkovic', 'sifra', '2', '1', '1');
+ 	VALUES ('4', '33','admin1@admin1','Mirko', '2', 'Mirkovic', '$2a$10$lTvUa4ajfcVrhp0D0JMTIu2E.EYzzeyEHotMNJ3uTJ8xCY0bFZp7.', '2', '1', '1');
 INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`,`email`,`first_name`, `job_title`,`last_name`, `password`, `user_type`, `company_id`, `project_id`)
- 	VALUES ('1', '30','user@user','Marko', '0', 'Markovic', 'sifra', '1', '1', '1');
+ 	VALUES ('1', '30','user@user','Marko', '0', 'Markovic', '$2a$10$lTvUa4ajfcVrhp0D0JMTIu2E.EYzzeyEHotMNJ3uTJ8xCY0bFZp7.', '1', '1', '1');
 INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `age`,`email`,`first_name`, `job_title`,`last_name`, `password`, `user_type`, `company_id`, `project_id`) 
-	VALUES ('2', '29','lead@lead','Jovan', '2','Jovanovic', 'sifra', '0', '1', '1');
+	VALUES ('2', '29','lead@lead','Jovan', '2','Jovanovic', '$2a$10$lTvUa4ajfcVrhp0D0JMTIu2E.EYzzeyEHotMNJ3uTJ8xCY0bFZp7.', '0', '1', '1');
 
 --users(superAdmin)
 INSERT IGNORE INTO `diplomski`.`my_user` (`id`, `email`,`first_name`,`last_name`, `password`, `user_type`)
-VALUES ('3', 'superadmin@superadmin','Nemanja', 'Nemanjic', 'sifra', '3');
+VALUES ('3', 'superadmin@superadmin','Nemanja', 'Nemanjic', '$2a$10$lTvUa4ajfcVrhp0D0JMTIu2E.EYzzeyEHotMNJ3uTJ8xCY0bFZp7.', '3');
 
 --tasks
 INSERT IGNORE INTO `diplomski`.`task` (`id`, `description`,`name`,`status`,`user_id`)

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.workSchedule.workSchedule.dtos.ChangingUserDataDTO;
+import com.workSchedule.workSchedule.dtos.UserDTO;
 import com.workSchedule.workSchedule.model.MyUser;
 import com.workSchedule.workSchedule.service.UserService;
 import com.workSchedule.workSchedule.util.Authorized;
@@ -23,6 +24,15 @@ import com.workSchedule.workSchedule.util.Authorized;
 public class UserController {
 
 	@Autowired UserService userService;
+	
+	@PostMapping()
+	public ResponseEntity<MyUser> addUser(@RequestBody UserDTO userDTO,@RequestHeader("Authorization") String token) {
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return userService.addUser(userDTO,email);
+	}
 	
 	@GetMapping()
 	public ResponseEntity<List<MyUser>> getAll(@RequestHeader("Authorization") String token){

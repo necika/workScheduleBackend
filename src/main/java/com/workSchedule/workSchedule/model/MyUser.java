@@ -26,7 +26,7 @@ public class MyUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@Column
+	@Column()
 	private String email;
 	 
 	@Column
@@ -73,7 +73,7 @@ public class MyUser {
 	public MyUser() {}
 	
 	public MyUser(String email, String password, String firstName, String lastName, UserType userType,
-			JobTitle jobTitle,int age,Company company) {
+			JobTitle jobTitle,int age,Company company,Project project) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -86,6 +86,7 @@ public class MyUser {
 		this.morningMeetings = new ArrayList<MorningMeeting>();
 		this.tasks = new ArrayList<Task>();
 		this.company = company;
+		this.project = project;
 	}
 
 	public List<Task> getTasks() {

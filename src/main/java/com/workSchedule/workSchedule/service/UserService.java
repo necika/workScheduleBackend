@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.workSchedule.workSchedule.dtos.ChangingUserDataDTO;
+import com.workSchedule.workSchedule.dtos.UserDTO;
 import com.workSchedule.workSchedule.enums.JobTitle;
 import com.workSchedule.workSchedule.enums.UserType;
 import com.workSchedule.workSchedule.model.MyUser;
@@ -24,6 +26,9 @@ public class UserService {
 	
 	@Autowired 
 	ProjectRepository projectRepo;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	JwtUtil jwtUtil;
@@ -100,6 +105,23 @@ public class UserService {
 		if(!userDTO.getTitle().equals("")) {
 			user.setJobTitle(JobTitle.valueOf(userDTO.getTitle()));
 		}
+		user = userRepo.save(user);
+		return new ResponseEntity(user,HttpStatus.OK);
+	}
+
+	public ResponseEntity<MyUser> addUser(UserDTO userDTO,String email) {
+		MyUser admin = userRepo.findByEmail(email);
+		if(admin == null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		
+		Project project = projectRepo.getOneById(userDTO.getProjectId());
+		if(project == null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		
+		MyUser user = new MyUser(userDTO.getEmail(),encoder.encode(userDTO.getPassword()),userDTO.getFirstName(),userDTO.getLastName(),
+				UserType.EMPLOYER,JobTitle.valueOf(userDTO.getJobTitle()),userDTO.getAge(),admin.getCompany(),project);
 		user = userRepo.save(user);
 		return new ResponseEntity(user,HttpStatus.OK);
 	}
