@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.workSchedule.workSchedule.dtos.ChangeUserSimpleDataDTO;
 import com.workSchedule.workSchedule.dtos.ChangingUserDataDTO;
 import com.workSchedule.workSchedule.dtos.UserDTO;
 import com.workSchedule.workSchedule.enums.JobTitle;
@@ -81,12 +82,12 @@ public class UserService {
 		return new ResponseEntity<List<MyUser>>(users,HttpStatus.OK);
 	}
 
-	public ResponseEntity<List<MyUser>> getAllByProject(String email) {
+	public ResponseEntity<List<MyUser>> getAllByProject(String email,Long id) {
 		MyUser user = userRepo.findByEmail(email);
 		if(user == null) {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
-		List<MyUser> users = userRepo.getAllByProject(user.getCompany().getId(),user.getProject().getId());
+		List<MyUser> users = userRepo.getAllByProject(user.getCompany().getId(),id);
 		return new ResponseEntity<List<MyUser>>(users,HttpStatus.OK);
 	}
 
@@ -94,13 +95,6 @@ public class UserService {
 		MyUser user = userRepo.getOneById(userDTO.getId());
 		if(user == null) {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-		}
-		if(userDTO.getProjectId() != 0) {
-			Project project = projectRepo.getOneById(userDTO.getProjectId());
-			if(project == null) {
-				return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-			}
-			user.setProject(project);
 		}
 		if(!userDTO.getTitle().equals("")) {
 			user.setJobTitle(JobTitle.valueOf(userDTO.getTitle()));
@@ -121,7 +115,30 @@ public class UserService {
 		}
 		
 		MyUser user = new MyUser(userDTO.getEmail(),encoder.encode(userDTO.getPassword()),userDTO.getFirstName(),userDTO.getLastName(),
-				UserType.EMPLOYER,JobTitle.valueOf(userDTO.getJobTitle()),userDTO.getAge(),admin.getCompany(),project);
+				UserType.EMPLOYER,JobTitle.valueOf(userDTO.getJobTitle()),userDTO.getAge(),admin.getCompany());
+		project.getUsers().add(user);
+		user.getProjects().add(project);
+		user.setUserType(UserType.valueOf(userDTO.getUserType()));
+		user = userRepo.save(user);
+		return new ResponseEntity(user,HttpStatus.OK);
+	}
+
+	public ResponseEntity<List<MyUser>> findAll() {
+		return new ResponseEntity<List<MyUser>>(userRepo.findAll(),HttpStatus.OK);
+	}
+
+	public ResponseEntity<MyUser> changeSimpleUserData(ChangeUserSimpleDataDTO userDTO) {
+		MyUser user = userRepo.getOneById(userDTO.getId());
+		if(user == null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		user.setAge(userDTO.getAge());
+		user.setEmail(userDTO.getEmail());
+		user.setFirstName(userDTO.getFirstName());
+		user.setLastName(userDTO.getLastName());
+		if(userDTO.getPassword() != null && userDTO.getPassword() != "") {
+			user.setPassword(encoder.encode(userDTO.getPassword()));
+		}
 		user = userRepo.save(user);
 		return new ResponseEntity(user,HttpStatus.OK);
 	}
