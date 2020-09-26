@@ -1,5 +1,8 @@
 package com.workSchedule.workSchedule.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -34,6 +40,10 @@ public class Task {
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	private MyUser user;
 	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "tasks")
+	private List<MorningMeeting> sestre = new ArrayList<MorningMeeting>();
+	
 	public Task() {}
 
 	public Long getId() {
@@ -50,6 +60,16 @@ public class Task {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	
+
+	public List<MorningMeeting> getSestre() {
+		return sestre;
+	}
+
+	public void setSestre(List<MorningMeeting> sestre) {
+		this.sestre = sestre;
 	}
 
 	public String getDescription() {

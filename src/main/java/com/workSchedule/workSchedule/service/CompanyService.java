@@ -30,7 +30,7 @@ public class CompanyService {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
 		}
 		MyUser user = new MyUser(companyDTO.getUsername(),encoder.encode(companyDTO.getPassword()),companyDTO.getFirstName(),
-				companyDTO.getLastName(),UserType.ADMIN,JobTitle.SENIOR,companyDTO.getAge(),company,null);
+				companyDTO.getLastName(),UserType.ADMIN,JobTitle.SENIOR,companyDTO.getAge(),company);
 		user = userRepo.save(user);
 		if(user.getId() == null) {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);

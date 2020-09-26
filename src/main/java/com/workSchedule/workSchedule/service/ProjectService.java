@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.workSchedule.workSchedule.dtos.AddProjectDTO;
+import com.workSchedule.workSchedule.dtos.AddUserToProjectDTO;
 import com.workSchedule.workSchedule.dtos.ProjectDTO;
+import com.workSchedule.workSchedule.enums.UserType;
 import com.workSchedule.workSchedule.model.MyUser;
 import com.workSchedule.workSchedule.model.Project;
 import com.workSchedule.workSchedule.repository.ProjectRepository;
@@ -27,7 +29,12 @@ public class ProjectService {
 		if(user == null) {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
 		}
-		List<Project> projects = projectRepo.findAll();
+		List<Project> projects = null;
+		if(user.getUserType() == UserType.LEADER) {
+			projects = projectRepo.getProjectByLeaderId(user.getId());
+		}else {
+			 projects = projectRepo.findAll();
+		}
 		if(projects == null) {
 			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
 		}
@@ -43,14 +50,15 @@ public class ProjectService {
 		project.setCompany(user.getCompany());
 		project.setDescription(projectDTO.getDescription());
 		project.setName(projectDTO.getName());
-		project = projectRepo.save(project);
-		List<MyUser> users = new ArrayList<MyUser>();
+		project.setStartDate(projectDTO.getStartDate());
+		project.setEndDate(projectDTO.getEndDate());
 		for(Long id : projectDTO.getUsers()) {
 			MyUser currUser = userRepo.getOneById(id);
-			currUser.setProject(project);
+			project.getUsers().add(currUser);
 			currUser = userRepo.save(currUser);
-			users.add(currUser);
 		}
+		project = projectRepo.save(project);
+		List<MyUser> users = new ArrayList<MyUser>();
 		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project),HttpStatus.OK);
 	}
 	
@@ -63,6 +71,55 @@ public class ProjectService {
 			}
 		}
 		return projectsDTO;
+	}
+
+	public ResponseEntity<ProjectDTO> getById(Long id) {
+		Project project = projectRepo.getOneById(id);
+		if(project == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project),HttpStatus.OK);
+	}
+
+	public ResponseEntity<ProjectDTO> addUserToProject(AddUserToProjectDTO userProjectDTO) {
+		Project project = projectRepo.getOneById(userProjectDTO.getProjectId());
+		if(project == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		MyUser user = userRepo.getOneById(userProjectDTO.getUserId());
+		if(user == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		Boolean inProjectYet = false;
+		for(MyUser u : project.getUsers()) {
+			if(u.getId() == userProjectDTO.getUserId()) {
+				inProjectYet = true;
+			}
+		}
+		if(!inProjectYet) {
+			project.getUsers().add(user);
+			project = projectRepo.save(project);
+		}
+		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project),HttpStatus.OK);
+	}
+
+	public ResponseEntity<ProjectDTO> removeUserFromProject(AddUserToProjectDTO userProjectDTO) {
+		Project project = projectRepo.getOneById(userProjectDTO.getProjectId());
+		if(project == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		MyUser user = userRepo.getOneById(userProjectDTO.getUserId());
+		if(user == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		for(MyUser u : project.getUsers()) {
+			if(u.getId() == userProjectDTO.getUserId()) {
+				project.getUsers().remove(u);
+				break;
+			}
+		}
+		project = projectRepo.save(project);
+		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project),HttpStatus.OK);
 	}
 	
 }

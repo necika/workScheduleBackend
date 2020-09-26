@@ -2,6 +2,7 @@ package com.workSchedule.workSchedule.controller;
 
 import java.util.List;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.workSchedule.workSchedule.dtos.ChangeUserSimpleDataDTO;
 import com.workSchedule.workSchedule.dtos.ChangingUserDataDTO;
 import com.workSchedule.workSchedule.dtos.UserDTO;
 import com.workSchedule.workSchedule.model.MyUser;
@@ -34,6 +36,15 @@ public class UserController {
 		return userService.addUser(userDTO,email);
 	}
 	
+	@GetMapping("/all")
+	public ResponseEntity<List<MyUser>> all(@RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return userService.findAll();
+	}
+	
 	@GetMapping()
 	public ResponseEntity<List<MyUser>> getAll(@RequestHeader("Authorization") String token){
 		String email = userService.getEmailFromToken(token);
@@ -52,13 +63,22 @@ public class UserController {
 		return userService.changeUserData(userDTO);
 	}
 	
-	@GetMapping("/inTeam")
-	public ResponseEntity<List<MyUser>> getAllByProject(@RequestHeader("Authorization") String token){
+	@PostMapping("/changeSimpleUserData")
+	public ResponseEntity<MyUser> changeSimpleUserData(@RequestBody ChangeUserSimpleDataDTO userDTO,@RequestHeader("Authorization") String token) {
 		String email = userService.getEmailFromToken(token);
 		if(email != null && !Authorized.isAuthorised(email)) {
 			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
 		}
-		return userService.getAllByProject(email);
+		return userService.changeSimpleUserData(userDTO);
+	}
+	
+	@GetMapping("/inTeam/{id}")
+	public ResponseEntity<List<MyUser>> getAllByProject(@PathVariable Long id,@RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return userService.getAllByProject(email,id);
 	}
 	
 	@GetMapping("/getTeamLeaders")

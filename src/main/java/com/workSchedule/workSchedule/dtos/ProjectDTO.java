@@ -13,6 +13,8 @@ public class ProjectDTO {
 	private String description;
 	private Company company;
 	private List<MyUser> users;
+	private String startDate;
+	private String endDate;
 	
 	public ProjectDTO() {}
 	
@@ -22,6 +24,12 @@ public class ProjectDTO {
 		this.description = project.getDescription();
 		this.company = project.getCompany();
 		this.users = project.getUsers();
+		this.startDate = project.getStartDate();
+		if(project.getEndDate() == null) {
+			this.endDate = "";
+		}else {
+			this.endDate = project.getEndDate();
+		}
 	}
 
 	public Long getId() {
@@ -38,6 +46,22 @@ public class ProjectDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public String getDescription() {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.workSchedule.workSchedule.dtos.AddProjectDTO;
+import com.workSchedule.workSchedule.dtos.AddUserToProjectDTO;
 import com.workSchedule.workSchedule.dtos.ProjectDTO;
 import com.workSchedule.workSchedule.dtos.TimesheetEntryDTO;
 import com.workSchedule.workSchedule.service.ProjectService;
@@ -45,6 +46,33 @@ public class ProjectController {
 			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
 		}
 		return projectService.saveProject(projectDTO,email);
+	}
+	
+	@PostMapping("/addUser")
+	public ResponseEntity<ProjectDTO> addUserToProject(@RequestBody AddUserToProjectDTO userProjectDTO, @RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return projectService.addUserToProject(userProjectDTO);
+	}
+	
+	@PostMapping("/removeUserFromProject")
+	public ResponseEntity<ProjectDTO> removeUserFromProject(@RequestBody AddUserToProjectDTO userProjectDTO, @RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return projectService.removeUserFromProject(userProjectDTO);
+	}
+	
+	@GetMapping("{id}")
+	public ResponseEntity<ProjectDTO> getById(@PathVariable Long id,@RequestHeader("Authorization") String token){
+		String email = userService.getEmailFromToken(token);
+		if(email != null && !Authorized.isAuthorised(email)) {
+			return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+		}
+		return projectService.getById(id);
 	}
 	
 }

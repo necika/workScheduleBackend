@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -67,13 +68,14 @@ public class MyUser {
 	private Company company;
 	
 	@JsonIgnore
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	private Project project;
+	@ManyToMany(mappedBy = "users")
+	private List<Project> projects = new ArrayList<Project>();
+	
 	
 	public MyUser() {}
 	
 	public MyUser(String email, String password, String firstName, String lastName, UserType userType,
-			JobTitle jobTitle,int age,Company company,Project project) {
+			JobTitle jobTitle,int age,Company company) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -86,7 +88,6 @@ public class MyUser {
 		this.morningMeetings = new ArrayList<MorningMeeting>();
 		this.tasks = new ArrayList<Task>();
 		this.company = company;
-		this.project = project;
 	}
 
 	public List<Task> getTasks() {
@@ -185,13 +186,15 @@ public class MyUser {
 		this.company = company;
 	}
 
-	public Project getProject() {
-		return project;
+	public List<Project> getProjects() {
+		return projects;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
 	}
+
+	
 	
 	
 }

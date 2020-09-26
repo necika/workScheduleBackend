@@ -46,6 +46,15 @@ public class TaskService {
 		List<Task> tasks = taskRepo.findAllByUserId(user.getId());
 		return new ResponseEntity<List<TaskDTO>>(convertEntityToEntityDTOList(tasks),HttpStatus.OK);
 	}
+	
+	public ResponseEntity<List<TaskDTO>> getAllById(Long id) {
+		MyUser user = userRepo.getOneById(id);
+		if(user == null) {
+			return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+		}
+		List<Task> tasks = taskRepo.findAllByUserId(user.getId());
+		return new ResponseEntity<List<TaskDTO>>(convertEntityToEntityDTOList(tasks),HttpStatus.OK);
+	}
 	private List<TaskDTO> convertEntityToEntityDTOList(List<Task> tasks){
 		List<TaskDTO> tasksDTO = new ArrayList<TaskDTO>();
 		for(Task t : tasks) {

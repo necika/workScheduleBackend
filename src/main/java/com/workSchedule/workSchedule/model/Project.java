@@ -1,5 +1,6 @@
 package com.workSchedule.workSchedule.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,10 +33,20 @@ public class Project {
 	@Column
 	private String description;
 	
+	@Column
+	private String startDate;
+	
+	@Column 
+	private String endDate;
+	
 	@JsonIgnore
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, 
-			CascadeType.REFRESH })
-	private List<MyUser> users;
+	@ManyToMany(cascade = {
+	        CascadeType.PERSIST,
+	        CascadeType.MERGE})
+	@JoinTable(name = "project_user",
+	        joinColumns = @JoinColumn(name = "project_id"),
+	        inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private List<MyUser> users = new ArrayList<MyUser>();
 	
 	@JsonIgnore
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
@@ -79,7 +93,20 @@ public class Project {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	
-	
-	
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 }
